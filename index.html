@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đọc Truyện Việt</title>
+<style>
+body{font:16px system-ui;background:#10151d;color:#eef2f7;margin:0;padding:20px;max-width:760px;margin:auto}
+h1{font-size:26px}input,textarea,button{box-sizing:border-box;width:100%;padding:13px;margin:7px 0;border-radius:10px;border:1px solid #45505f;background:#1a2330;color:#fff;font:inherit}
+textarea{min-height:260px}button{background:#2563eb;border:0;font-weight:700}small{color:#aab4c2}
+</style>
+<h1>📚 Đọc Truyện Việt</h1>
+<p><small>Bản thử nghiệm: lấy văn bản từ website được hỗ trợ và đọc bằng giọng Safari.</small></p>
+<label>Link chương truyện</label><input id="url" type="url" placeholder="https://...">
+<button id="get">Lấy nội dung chương</button>
+<label>Nội dung truyện</label><textarea id="content" placeholder="Nội dung chương sẽ xuất hiện ở đây. Bạn cũng có thể dán văn bản vào."></textarea>
+<button id="read">▶ Đọc thành tiếng</button><button id="stop">Dừng đọc</button>
+<p id="status"></p>
+<script>
+const content=document.querySelector('#content'),status=document.querySelector('#status');
+document.querySelector('#get').onclick=async()=>{status.textContent='Đang tải...';try{let r=await fetch('/api/extract',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:document.querySelector('#url').value})});let d=await r.json();if(!r.ok)throw Error(d.detail||'Không lấy được nội dung');content.value=d.content;status.textContent='Đã lấy: '+d.title}catch(e){status.textContent=e.message}};
+document.querySelector('#read').onclick=()=>{speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(content.value);u.lang='vi-VN';speechSynthesis.speak(u)};
+document.querySelector('#stop').onclick=()=>speechSynthesis.cancel();
+</script></html>
