@@ -85,7 +85,7 @@ def fetch(url):
                     data.extend(chunk)
                     if len(data) > MAX_HTML:
                         raise HTTPException(413, 'Trang quá lớn.')
-                r.encoding = r.apparent_encoding or 'utf-8'
+                r.encoding = 'utf-8'
                 return r.url, bytes(data).decode(r.encoding, errors='replace')
         except requests.RequestException:
             raise HTTPException(502, 'Không tải được chương. Website có thể chặn truy cập tự động.')
